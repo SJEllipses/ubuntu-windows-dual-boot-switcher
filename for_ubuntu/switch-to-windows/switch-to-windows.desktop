@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Switch to Windows
+Comment=Boot directly into Windows on the next restart
+Exec=/usr/local/bin/switch-to-windows
+Icon=/usr/local/share/icons/switch-to-windows.png
+Terminal=false
+Categories=System;
+Keywords=Windows;Reboot;Boot;
+StartupNotify=false

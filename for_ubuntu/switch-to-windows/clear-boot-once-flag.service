@@ -1,0 +1,12 @@
+[Unit]
+Description=Clear one-time Ubuntu boot flag written by Windows
+DefaultDependencies=no
+After=local-fs.target
+RequiresMountsFor=/boot/efi
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/clear-switch-to-ubuntu-flag
+
+[Install]
+WantedBy=sysinit.target

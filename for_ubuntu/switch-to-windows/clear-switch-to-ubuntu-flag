@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+
+esp=$(/usr/bin/findmnt -n -o TARGET /boot/efi)
+if [ -z "$esp" ]; then
+    echo "clear-switch-to-ubuntu-flag: /boot/efi is not mounted" >&2
+    exit 1
+fi
+if [ ! -d "$esp/EFI/ubuntu" ]; then
+    echo "clear-switch-to-ubuntu-flag: $esp/EFI/ubuntu does not exist" >&2
+    exit 1
+fi
+
+/usr/bin/rm -f -- "$esp/EFI/ubuntu/switch.flag"

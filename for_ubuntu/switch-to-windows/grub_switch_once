@@ -1,0 +1,59 @@
+#!/bin/sh
+# This file is installed by install.sh with a dynamically allocated
+# numeric prefix such as /etc/grub.d/42_switch_boot_once or 43_switch_boot_once.
+set -eu
+
+# Find the real Ubuntu menu title every time update-grub runs. This handles the
+# case where Ubuntu is not GRUB's first/default entry.
+ubuntu_entry=$(/usr/bin/awk -F"'" '
+    /^[[:space:]]*submenu[[:space:]]+/ { submenu=$2; next }
+    $1 ~ /^[[:space:]]*menuentry[[:space:]]+/ && tolower($2) ~ /^ubuntu/ {
+        title=$2
+        if (submenu != "") {
+            title = submenu ">" title
+        }
+        print title
+        exit
+    }
+    /^[[:space:]]*}[[:space:]]*$/ { submenu=""; next }
+' /boot/grub/grub.cfg)
+
+if [ -z "$ubuntu_entry" ]; then
+    echo "switch-to-ubuntu: no Ubuntu menuentry was found in /boot/grub/grub.cfg" >&2
+    exit 1
+fi
+
+# GRUB menu titles are normally single-quoted. Escape both characters that can
+# occur in generated titles before emitting them into grub.cfg.
+ubuntu_quoted=$(printf '%s' "$ubuntu_entry" |
+    /usr/bin/sed -e 's/\\/\\\\/g' -e "s/'/\\\\'/g" |
+    /usr/bin/tr -d '\n')
+ubuntu_quoted="'$ubuntu_quoted'"
+
+cat <<EOF
+# SWITCH_BOOT_ONCE_MARKER
+# Generated from /etc/grub.d/*_switch_boot_once; do not edit grub.cfg directly.
+
+# grub-editenv variables are not consumed by grub-mkconfig's normal header, so
+# this works even when GRUB_DEFAULT is 0, saved, or another configured entry.
+if [ -s "\${prefix}/grubenv" ]; then
+  load_env
+fi
+
+# A one-shot variable written by switch-to-windows has priority over a stale
+# Ubuntu flag. It is cleared in grubenv before Windows starts.
+if [ "\${switch_to_windows_entry}" != "" ]; then
+  set default="\${switch_to_windows_entry}"
+  set timeout=0
+  set timeout_style=hidden
+  set switch_to_windows_entry=
+  save_env switch_to_windows_entry
+else
+  insmod fat
+  if search --no-floppy --file /EFI/ubuntu/switch.flag --set=switch_ubuntu_esp; then
+    set default=$ubuntu_quoted
+    set timeout=0
+    set timeout_style=hidden
+  fi
+fi
+EOF
