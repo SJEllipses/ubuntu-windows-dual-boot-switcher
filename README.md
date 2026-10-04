@@ -61,6 +61,13 @@ Simply delete the *Switch to Ubuntu* shortcut.
 
 直接删除 *Switch to Ubuntu* 的快捷方式即可。
 
+## Testing 测试
+
+Tested and verified passing on **Ubuntu 26.04.1 LTS** and **Windows 11 25H2**.
+
+已在 **Ubuntu 26.04.1 LTS** 与 **Windows 11 25H2** 上测试通过。
+
+
 ## License 许可
 
 This project is licensed under the [MIT License](./LICENSE.txt).
