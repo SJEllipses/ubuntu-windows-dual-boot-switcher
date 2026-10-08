@@ -2,9 +2,9 @@
 
 # ubuntu-windows-dual-boot-switcher
 
-One-click reboot into the other OS on an Ubuntu + Windows dual-boot machine.
+Shortcut for reboot directly into the other OS on an Ubuntu + Windows dual-boot machine.
 
-在一台 Ubuntu + Windows 双系统设备上，一键重启并直接进入另一个系统。
+在一台 Ubuntu + Windows 双系统设备上，用于重启并直接进入另一个系统的快捷方式。
 
 This project adds a desktop icon to **both** Ubuntu and Windows so that launching it reboots straight into the *other* operating system — no manual selection at the GRUB menu and no 10-second timeout wait.
 
@@ -28,7 +28,7 @@ This is typically the case when Windows is installed first and Ubuntu is install
 
 > **Important:** Install the Ubuntu side **first**; the Windows side depends on a GRUB configuration file that the Ubuntu installer creates.
 
-> **重要提示：** 请先完成 Ubuntu 侧的安装，再进行 Windows 侧的安装，因为 Windows 侧需要依赖 Ubuntu 安装时为 GRUB 生成的配置文件。
+> **重要提示：** 请**先完成 Ubuntu 侧的安装**，再进行 Windows 侧的安装，因为 Windows 侧需要依赖 Ubuntu 安装时为 GRUB 生成的配置文件。
 
 ### Ubuntu side (switch to Windows)
 
@@ -44,6 +44,12 @@ sudo ./install.sh
 
 ```bash
 uninstall-switch-to-windows
+```
+
+#### Run from a Terminal 终端命令
+
+```bash
+switch-to-windows
 ```
 
 ### Windows side (switch to Ubuntu)
